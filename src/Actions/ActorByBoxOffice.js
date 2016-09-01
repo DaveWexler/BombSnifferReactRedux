@@ -1,1 +1,1 @@
-export defauld const actorByBoxOffice
+export default const actorByBoxOffice

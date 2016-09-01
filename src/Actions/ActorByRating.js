@@ -1,6 +1,6 @@
 import $ from 'jquery'
 
-export default const actorByRating = (UserInput) => {
+const actorByRating = (UserInput) => {
 
   var personId
   var movies = []
@@ -59,7 +59,6 @@ export default const actorByRating = (UserInput) => {
       }).done(function(yt){
         movie.youtubeLink = `http://www.youtube.com/embed/${yt.items[0].id.videoId}`
       })
-    // })
   }
 
   function filterMovies() {
@@ -80,7 +79,7 @@ function bottomFive(){
 }
 // ----------------end helpers --------------------
   return {
-    type: "ACTOR_BY_RATING"
+    type: "ACTOR_BY_RATING",
     payload: payload
   }
 }
