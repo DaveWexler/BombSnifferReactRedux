@@ -1,20 +1,23 @@
-export default const actorByRating = () => {
+import $ from 'jquery'
+
+export default const actorByRating = (UserInput) => {
 
   var personId
+  var movies = []
 
+  var payload = searchActors().then(getMovies).then(bottomFive)
 
-  function searchActors(input) {
+  function searchActors() {
 
     return $.ajax({
       method: "GET",
-      url: `https://api.themoviedb.org/3/search/person?query=${input}&api_key=bcd69b485671c77289868b4acf21bcf0`
+      url: `https://api.themoviedb.org/3/search/person?query=${UserInput}&api_key=bcd69b485671c77289868b4acf21bcf0`
     }).done(function(response){
       personId = response.results[0].id
     })
   }
 
   function getMovies() {
-    var movies = []
     return $.ajax({
     //search for movies of that person
       method: "GET",
@@ -49,7 +52,6 @@ export default const actorByRating = () => {
     })
   }
 
-
   function getYoutube(movie){
       $.ajax({
       method: "GET",
@@ -59,9 +61,26 @@ export default const actorByRating = () => {
       })
     // })
   }
+
+  function filterMovies() {
+  //filter movies so that we only have ones with rev, budget, imbd and poster
+    return movies.filter((m) => {
+      return m.poster.split("/").pop() != "w500null" && parseInt(m.year) < 2016 && m.revenue
+    });
+  }
+
+function bottomFive(){
+  var list = filterMovies()
+  // debugger
+  var result = []
+  for (i = 0; i < 5; i++){
+    result.push(list[i])
+  }
+  return result
+}
 // ----------------end helpers --------------------
   return {
     type: "ACTOR_BY_RATING"
-    payload:
+    payload: payload
   }
 }

@@ -5,7 +5,7 @@ const SearchBar = class extends Component {
     return(
       <div>
         <div class="form-center">
-          <form role="form">
+          <form role="form" onSubmit={this.props.handleSubmit}>
             <div class="form-group">
               <!-- input -->
               <div class="row">
@@ -23,9 +23,9 @@ const SearchBar = class extends Component {
               </div>
               <br />
               <div class="col-md-3">
-                <button id= "submit" type="button" class="btn btn-default btn-lg">
+                <input type="submit" id= "submit" class="btn btn-default btn-lg">
                   <span class="glyphicon glyphicon-search"></span>
-                </button>
+                </input>
               </div>
             </div>
           </form>
