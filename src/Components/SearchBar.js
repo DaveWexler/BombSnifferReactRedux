@@ -1,9 +1,16 @@
 import React, { Component } from 'react'
-import SearchBarContainer from '../Containers/SearchBarContainer'
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux'
+import { actorByRating } from '../Actions/ActorByRating'
+
 
 const SearchBar=class extends Component {
   handleSubmit(event) {
+    event.preventDefault()
+    var userInput = event.target.children[0].children[0].children[0].children[0].value
     debugger
+    this.props.actorByRating(userInput)
+    //"this" is undefined at this point, much less props.  Have no access to action creator
   }
 
   render() {
@@ -34,4 +41,9 @@ const SearchBar=class extends Component {
     )
   }
 }
-export default SearchBar
+
+function mapDispatchToProps(dispatch){
+  return bindActionCreators({actorByRating: actorByRating}, dispatch)
+}
+
+export default connect(null, mapDispatchToProps)(SearchBar)

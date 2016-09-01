@@ -1,11 +1,11 @@
 import $ from 'jquery'
 
 const actorByRating = (UserInput) => {
-
+  debugger
   var personId
   var movies = []
 
-  var payload = searchActors().then(getMovies).then(bottomFive)
+  var request = searchActors().then(getMovies).then(bottomFive)
 
   function searchActors() {
 
@@ -19,12 +19,9 @@ const actorByRating = (UserInput) => {
 
   function getMovies() {
     return $.ajax({
-    //search for movies of that person
       method: "GET",
       url: `https://api.themoviedb.org/3/discover/movie?with_cast=${personId}&vote_count.gte=20&sort_by=vote_average.asc&budget.desc&api_key=bcd69b485671c77289868b4acf21bcf0&include_image_language=en`
     }).done(function(response) {
-    // debugger
-    //make all movie object for that actor
       response.results.forEach((m) => {
         movie = {}
         movie.title = m.title
@@ -70,7 +67,6 @@ const actorByRating = (UserInput) => {
 
 function bottomFive(){
   var list = filterMovies()
-  // debugger
   var result = []
   for (i = 0; i < 5; i++){
     result.push(list[i])
@@ -80,6 +76,8 @@ function bottomFive(){
 // ----------------end helpers --------------------
   return {
     type: "ACTOR_BY_RATING",
-    payload: payload
+    payload: request
   }
 }
+
+export default actorByRating
