@@ -1,6 +1,6 @@
 import $ from 'jquery'
 
-const actorByRating = (UserInput) => {
+const actorByRating = (props) => {
   debugger
   var personId
   var movies = []

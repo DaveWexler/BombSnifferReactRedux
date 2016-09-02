@@ -1,30 +1,25 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux'
-import { actorByRating } from '../Actions/ActorByRating'
+import actorByRating from '../Actions/ActorByRating'
+import { reduxForm } from 'redux-form';
 
 
-const SearchBar=class extends Component {
-  handleSubmit(event) {
-    event.preventDefault()
-    var userInput = event.target.children[0].children[0].children[0].children[0].value
-    debugger
-    this.props.actorByRating(userInput)
-    //"this" is undefined at this point, much less props.  Have no access to action creator
-  }
+
+class SearchBar extends Component {
 
   render() {
+    const { fields: { searchTerm, actorDirector }, handleSubmit } = this.props;
+
     return(
       <div>
         <div className="form-center">
-          <form onSubmit={this.handleSubmit}>
+          <form onSubmit={handleSubmit(actorByRating)}>
             <div className="form-group">
               <div className="row">
                 <div className="col-md-6">
-                  <input className="form-control" type="text"  name="searchTerms" id="searchTerms" placeholder="search" />
+                  <input className="form-control" type="text"  name="searchTerms" id="searchTerms" placeholder="search" {...searchTerm}/>
                 </div>
                 <div className="col-md-3">
-                  <select id="searchType" className="btn btn-default btn-lg dropdown-toggle" type="button" data-toggle="dropdown">
+                  <select id="searchType" className="btn btn-default btn-lg dropdown-toggle" type="button" data-toggle="dropdown" {...actorDirector}>
                     <option value="actor" id="searchActor">Seach by Actor</option>
                     <option value="director" id="searchDirector">Seach by Director</option>
                   </select>
@@ -32,7 +27,7 @@ const SearchBar=class extends Component {
               </div>
               <br />
               <div className="col-md-3">
-                <input type="submit" id= "submit" className="btn btn-default btn-lg" />
+                <input type="submit" id="submit" className="btn btn-default btn-lg" />
               </div>
             </div>
           </form>
@@ -42,8 +37,10 @@ const SearchBar=class extends Component {
   }
 }
 
-function mapDispatchToProps(dispatch){
-  return bindActionCreators({actorByRating: actorByRating}, dispatch)
-}
-
-export default connect(null, mapDispatchToProps)(SearchBar)
+export default reduxForm({
+  form: 'SearchBar',
+  fields: [
+    'searchTerm',
+    'actorDirector',
+  ],
+}, null, { actorByRating })(SearchBar);
