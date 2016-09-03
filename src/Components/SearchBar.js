@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+<<<<<<< HEAD
 import actorByRating from '../Actions/ActorByRating'
 import { Field, reduxForm } from 'redux-form';
 
@@ -47,7 +48,6 @@ class SearchBar extends Component {
     )
   }
 }
-
 
 export default reduxForm({
   form: 'SearchBar',
