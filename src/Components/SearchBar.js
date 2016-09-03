@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-<<<<<<< HEAD
 import actorByRating from '../Actions/ActorByRating'
 import { Field, reduxForm } from 'redux-form';
 

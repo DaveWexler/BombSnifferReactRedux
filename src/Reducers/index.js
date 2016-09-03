@@ -9,7 +9,6 @@ const rootReducer = combineReducers({
   form: formReducer
   // directorSearch: DirectorSearch,
   // getYouTube: GetYouTube,
-  form: formReducer,
 });
 
 export default rootReducer;
