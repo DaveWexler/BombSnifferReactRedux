@@ -1,7 +1,6 @@
 import $ from 'jquery'
 
-const actorByRating = (props) => {
-  debugger
+const actorByRating = (UserInput) => {
   var personId
   var movies = []
 
@@ -18,22 +17,28 @@ const actorByRating = (props) => {
   }
 
   function getMovies() {
-    return $.ajax({
+    var tempmovies = []
+    $.ajax({
       method: "GET",
       url: `https://api.themoviedb.org/3/discover/movie?with_cast=${personId}&vote_count.gte=20&sort_by=vote_average.asc&budget.desc&api_key=bcd69b485671c77289868b4acf21bcf0&include_image_language=en`
     }).done(function(response) {
       response.results.forEach((m) => {
-        movie = {}
+        var movie = {}
         movie.title = m.title
         movie.year = m.release_date.split("-")[0]
         movie.movieId = m.id
         movie.overview = m.overview
         movie.poster = "http://image.tmdb.org/t/p/w500" + m.poster_path
+        // setTimeout(getYoutube, 500, movie)
+        // setTimeout(getMovieInfo, 500, movie)
         getYoutube(movie)
         getMovieInfo(movie)
-        debugger
-        movies.push(movie)
+        tempmovies.push(movie)
       })
+    })
+    debugger
+    tempmovies.forEach((movie) => {
+      movies.push(movie)
     })
   }
 //-----------helpers to get all required attrs for movie below------------
@@ -60,8 +65,9 @@ const actorByRating = (props) => {
 
   function filterMovies() {
   //filter movies so that we only have ones with rev, budget, imbd and poster
+    debugger
     return movies.filter((m) => {
-      return m.poster.split("/").pop() != "w500null" && parseInt(m.year) < 2016 && m.revenue
+      return m.poster.split("/").pop() !== "w500null" && parseInt(m.year) < 2016 && m.revenue
     });
   }
 
