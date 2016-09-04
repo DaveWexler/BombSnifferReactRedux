@@ -1,25 +1,30 @@
 import $ from 'jquery'
 
+var personId
+var movies = []
+
 function actorByRating(UserInput) {
 
-  var request = bottomFive(filterMovies(getMovieInfo(getYouTube(getMovies(searchActors())))))
+  var prom = searchActors().then(getMovies).then(getMovieInfo)
+  var request = setTimeout(prom.then(bottomFive), 1500)
+
+  // bottomFive(filterMovies(getMovieInfo(getYouTube(getMovies(searchActors())))))
 
   function searchActors() {
-    var personId
     return $.ajax({
       method: "GET",
       url: `https://api.themoviedb.org/3/search/person?query=${UserInput}&api_key=bcd69b485671c77289868b4acf21bcf0`
     }).done(function(response){
-      debugger
-      return personId = response.results[0].id
+      personId = response.results[0].id
     })
   }
 
-  function getMovies(actorID) {
+  function getMovies() {
     var tempmovies = []
+    debugger
     $.ajax({
       method: "GET",
-      url: `https://api.themoviedb.org/3/discover/movie?with_cast=${actorID}&vote_count.gte=20&sort_by=vote_average.asc&budget.desc&api_key=bcd69b485671c77289868b4acf21bcf0&include_image_language=en`
+      url: `https://api.themoviedb.org/3/discover/movie?with_cast=${personId}&vote_count.gte=20&sort_by=vote_average.asc&budget.desc&api_key=bcd69b485671c77289868b4acf21bcf0&include_image_language=en`
     }).done(function(response) {
       response.results.forEach((m) => {
         var movie = {}
@@ -28,16 +33,19 @@ function actorByRating(UserInput) {
         movie.movieId = m.id
         movie.overview = m.overview
         movie.poster = "http://image.tmdb.org/t/p/w500" + m.poster_path
-        tempmovies.push(movie)
+        getYouTube(movie)
+        saveMovie(movie)
       })
     })
-    return tempmovies
+  }
+  function saveMovie(movie){
+    movies.push(movie)
   }
 //-----------helpers to get all required attrs for movie below------------
-  function getMovieInfo(movieArray){
+  function getMovieInfo(){
     //assign movies more information
-    var infoArray = []
-    movieArray.forEach((m) => {
+    debugger
+    movies.forEach((m) => {
       $.ajax({
         method: "GET",
         url: `https://api.themoviedb.org/3/movie/${m.movieId}?&api_key=bcd69b485671c77289868b4acf21bcf0&append_to_results=imdb_id`
@@ -45,39 +53,30 @@ function actorByRating(UserInput) {
         m.revenue = response.revenue
         m.budget = response.budget
         m.imdbId = response.imdb_id
-        infoArray.push(m)
       })
     })
-    return infoArray
   }
 
-  function getYouTube(movieArray){
-    var youtubeArray = []
-    movieArray.forEach((movie) => {
+  function getYouTube(movie){
       $.ajax({
       method: "GET",
       url: `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${movie.title.split(" ").join("+")}+trailer&key=AIzaSyDzIKgrZXiQZjPCJT1GcTEggK09QCYESw0`
       }).done(function(yt){
         movie.youtubeLink = `http://www.youtube.com/embed/${yt.items[0].id.videoId}`
-        youtubeArray.push(movie)
       })
-    })
-    return youtubeArray
-  }
+    }
 
-  function filterMovies(moviesArray) {
+  function filterMovies() {
   //filter movies so that we only have ones with rev, budget, imbd and poster
-    return moviesArray.filter((m) => {
+    debugger
+    return movies.filter((m) => {
       return m.poster.split("/").pop() !== "w500null" && parseInt(m.year) < 2016 && m.revenue
     });
   }
 
-function bottomFive(filteredArray){
-  debugger
-  var result = []
-  for (i = 0; i < 5; i++){
-    result.push(filteredArray[i])
-  }
+function bottomFive(){
+  var list = filterMovies()
+  var result = list.slice(0,5)
   debugger
   return result
 }
@@ -89,3 +88,88 @@ function bottomFive(filteredArray){
 }
 
 export default actorByRating
+
+// new Promise(function(fulfill, reject){
+//     //do something for 5 seconds
+//     fulfill(result);
+// }).then(function(result){
+//     return new Promise(function(fulfill, reject){
+//         //do something for 5 seconds
+//         fulfill(result);
+//     });
+// }).then(function(result){
+//     return new Promise(function(fulfill, reject){
+//         //do something for 8 seconds
+//         fulfill(result);
+//     });
+// }).then(function(result){
+//     //do something with the result
+// });
+// var request = new Promise(function(resolve, reject){
+//   var personId
+//   return $.ajax({
+//     method: "GET",
+//     url: `https://api.themoviedb.org/3/search/person?query=${UserInput}&api_key=bcd69b485671c77289868b4acf21bcf0`
+//   }).done(function(response){
+//     debugger
+//     return personId = response.results[0].id
+//   })
+//   debugger
+//   resolve(personId)
+// }).then(function(result){
+//   debugger
+//   var tempmovies = []
+//   $.ajax({
+//     method: "GET",
+//     url: `https://api.themoviedb.org/3/discover/movie?with_cast=${result}&vote_count.gte=20&sort_by=vote_average.asc&budget.desc&api_key=bcd69b485671c77289868b4acf21bcf0&include_image_language=en`
+//   }).done(function(response) {
+//     response.results.forEach((m) => {
+//       var movie = {}
+//       movie.title = m.title
+//       movie.year = m.release_date.split("-")[0]
+//       movie.movieId = m.id
+//       movie.overview = m.overview
+//       movie.poster = "http://image.tmdb.org/t/p/w500" + m.poster_path
+//       debugger
+//       tempmovies.push(movie)
+//     })
+//   })
+//   resolve(tempmovies)
+// }).then(function(result){
+//   var youtubeArray = []
+//   result.forEach((movie) => {
+//     $.ajax({
+//     method: "GET",
+//     url: `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${movie.title.split(" ").join("+")}+trailer&key=AIzaSyDzIKgrZXiQZjPCJT1GcTEggK09QCYESw0`
+//     }).done(function(yt){
+//       movie.youtubeLink = `http://www.youtube.com/embed/${yt.items[0].id.videoId}`
+//       youtubeArray.push(movie)
+//     })
+//   })
+//   resolve(youtubeArray)
+// }).then(function(result){
+//   var infoArray = []
+//   result.forEach((m) => {
+//     $.ajax({
+//       method: "GET",
+//       url: `https://api.themoviedb.org/3/movie/${m.movieId}?&api_key=bcd69b485671c77289868b4acf21bcf0&append_to_results=imdb_id`
+//     }).done(function(response) {
+//       m.revenue = response.revenue
+//       m.budget = response.budget
+//       m.imdbId = response.imdb_id
+//       infoArray.push(m)
+//     })
+//   })
+//   resolve(infoArray)
+// }).then(function(result){
+//   fulfill(result.filter((m) => {
+//     return m.poster.split("/").pop() !== "w500null" && parseInt(m.year) < 2016 && m.revenue
+//   }));
+// }).then(function(result){
+//   var fivemovies = []
+//   for (i = 0; i < 5; i++){
+//     fivemovies.push(result[i])
+//   }
+//   debugger
+//   return fivemovies
+// })
