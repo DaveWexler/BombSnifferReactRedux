@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 import SearchBar from './Components/SearchBar'
+import SmartMovieList from './Containers/MovieList'
+
 
 class App extends Component {
   render() {
@@ -13,7 +15,7 @@ class App extends Component {
           <SearchBar />
         </div>
         <div className="movie-list">
-          <MovieList />
+          <SmartMovieList />
         </div>
         {/* <div className="youtube-preview">
           <YoutubePreview />
