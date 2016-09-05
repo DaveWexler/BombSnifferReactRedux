@@ -12,10 +12,10 @@ class App extends Component {
         <div className="search-bar">
           <SearchBar />
         </div>
-        {/* <div className="movie-list">
+        <div className="movie-list">
           <MovieList />
         </div>
-        <div className="youtube-preview">
+        {/* <div className="youtube-preview">
           <YoutubePreview />
         </div> */}
       </div>

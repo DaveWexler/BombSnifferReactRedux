@@ -5,8 +5,8 @@ var movies = []
 
 function actorByRating(UserInput) {
 
-  var prom = searchActors().then(getMovies).then(getMovieInfo)
-  var request = setTimeout(prom.then(bottomFive), 1500)
+  var prom = searchActors().then(getMovies)
+  var request = setTimeout(bottomFive(movies), 3000)
 
   // bottomFive(filterMovies(getMovieInfo(getYouTube(getMovies(searchActors())))))
 
@@ -20,8 +20,6 @@ function actorByRating(UserInput) {
   }
 
   function getMovies() {
-    var tempmovies = []
-    debugger
     $.ajax({
       method: "GET",
       url: `https://api.themoviedb.org/3/discover/movie?with_cast=${personId}&vote_count.gte=20&sort_by=vote_average.asc&budget.desc&api_key=bcd69b485671c77289868b4acf21bcf0&include_image_language=en`
@@ -34,6 +32,7 @@ function actorByRating(UserInput) {
         movie.overview = m.overview
         movie.poster = "http://image.tmdb.org/t/p/w500" + m.poster_path
         getYouTube(movie)
+        getMovieInfo(movie)
         saveMovie(movie)
       })
     })
@@ -42,10 +41,7 @@ function actorByRating(UserInput) {
     movies.push(movie)
   }
 //-----------helpers to get all required attrs for movie below------------
-  function getMovieInfo(){
-    //assign movies more information
-    debugger
-    movies.forEach((m) => {
+  function getMovieInfo(m){
       $.ajax({
         method: "GET",
         url: `https://api.themoviedb.org/3/movie/${m.movieId}?&api_key=bcd69b485671c77289868b4acf21bcf0&append_to_results=imdb_id`
@@ -54,7 +50,6 @@ function actorByRating(UserInput) {
         m.budget = response.budget
         m.imdbId = response.imdb_id
       })
-    })
   }
 
   function getYouTube(movie){
@@ -66,17 +61,20 @@ function actorByRating(UserInput) {
       })
     }
 
-  function filterMovies() {
-  //filter movies so that we only have ones with rev, budget, imbd and poster
-    debugger
-    return movies.filter((m) => {
-      return m.poster.split("/").pop() !== "w500null" && parseInt(m.year) < 2016 && m.revenue
-    });
+  function filterMovies(m) {
+    return (m.poster.split("/").pop() !== "w500null" && parseInt(m.year) < 2016 && m.revenue !== 0)
   }
 
 function bottomFive(){
-  var list = filterMovies()
-  var result = list.slice(0,5)
+  // var list = filterMovies()
+  // debugger
+  // movies.forEach((m) => {
+  //   getMovieInfo(m)
+  // })
+  debugger
+  var fmovies = movies.filter(filterMovies)
+  debugger
+  var result = fmovies.slice(0,5)
   debugger
   return result
 }
