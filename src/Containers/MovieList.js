@@ -1,13 +1,14 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import Movie from '../Components/Movie'
 
 class MovieList extends Component {
-  render(){
-    var movies = this.props.movies
-    var moviepanels = movies.map((movie, idx)=> {
+  render() {
+    var movies = this.props.movies || []
+    var moviepanels = movies.map((movie, idx) => {
       return <Movie key={idx} title={movie.title} year={movie.year} overview={movie.overview} poster={movie.poster} netmoney={movie.revenue - movie.budget} youtube={movie.youtubeLink} imdb={movie.imdbId}/>
     })
-    return(
+    return (
       <div>
         {moviepanels}
       </div>
@@ -17,7 +18,7 @@ class MovieList extends Component {
 
 function mapStateToProps(state){
   return {
-      movies: state.movies
+      movies: state.actorSearch.movies
     }
   }
 

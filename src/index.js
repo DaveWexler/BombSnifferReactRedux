@@ -4,15 +4,16 @@ import App from './App';
 import { Provider } from 'react-redux'
 import rootReducer from './Reducers/index'
 import './index.css';
-import { createStore, applyMiddleware } from 'redux'
-import reduxPromise from 'redux-promise'
+import { createStore } from 'redux'
+// import ReduxPromise from 'redux-promise'
 
 
 
-const createStoreWithMiddleware = applyMiddleware(reduxPromise)(createStore)
+const store = createStore(rootReducer)
+console.log(store.getState())
 
 ReactDOM.render(
-  <Provider store={createStoreWithMiddleware(rootReducer)}>
+  <Provider store={store}>
     <App />
   </Provider>,
   document.getElementById('root')

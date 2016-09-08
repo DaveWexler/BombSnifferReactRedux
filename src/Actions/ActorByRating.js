@@ -6,8 +6,8 @@ var movies = []
 function actorByRating(UserInput) {
 
   var prom = searchActors().then(getMovies)
-  var request = setTimeout(bottomFive(movies), 3000)
-
+  var request = bottomFive(movies)
+  console.log(request)
   // bottomFive(filterMovies(getMovieInfo(getYouTube(getMovies(searchActors())))))
 
   function searchActors() {
@@ -71,11 +71,8 @@ function bottomFive(){
   // movies.forEach((m) => {
   //   getMovieInfo(m)
   // })
-  debugger
   var fmovies = movies.filter(filterMovies)
-  debugger
   var result = fmovies.slice(0,5)
-  debugger
   return result
 }
 // ----------------end helpers --------------------
