@@ -5,7 +5,7 @@ var movies = []
 
 function actorByRating(UserInput) {
 
-  var prom = searchActors().then(getMovies)
+  searchActors().then(getMovies)
   var request = bottomFive(movies)
   console.log(request)
   // bottomFive(filterMovies(getMovieInfo(getYouTube(getMovies(searchActors())))))
@@ -24,6 +24,7 @@ function actorByRating(UserInput) {
       method: "GET",
       url: `https://api.themoviedb.org/3/discover/movie?with_cast=${personId}&vote_count.gte=20&sort_by=vote_average.asc&budget.desc&api_key=bcd69b485671c77289868b4acf21bcf0&include_image_language=en`
     }).done(function(response) {
+      debugger
       response.results.forEach((m) => {
         var movie = {}
         movie.title = m.title
@@ -31,18 +32,20 @@ function actorByRating(UserInput) {
         movie.movieId = m.id
         movie.overview = m.overview
         movie.poster = "http://image.tmdb.org/t/p/w500" + m.poster_path
+
         getYouTube(movie)
         getMovieInfo(movie)
         saveMovie(movie)
       })
     })
+    // return movies
   }
   function saveMovie(movie){
     movies.push(movie)
   }
 //-----------helpers to get all required attrs for movie below------------
   function getMovieInfo(m){
-      $.ajax({
+      return $.ajax({
         method: "GET",
         url: `https://api.themoviedb.org/3/movie/${m.movieId}?&api_key=bcd69b485671c77289868b4acf21bcf0&append_to_results=imdb_id`
       }).done(function(response) {
