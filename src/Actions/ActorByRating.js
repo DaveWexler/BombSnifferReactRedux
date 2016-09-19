@@ -1,98 +1,58 @@
 import $ from 'jquery'
+import axios from 'axios'
+import MovieObj from '../models/movie'
 
-var personId,
-    movies = [],
-    initialMovies = {},
-    firstMovieInfo = [],
-    secondMovieInfo = [],
-    finalMovieInfo = []
-
+var personID
+var movies = []
 
 function actorByRating(UserInput) {
-  
-  searchActors().then(getMovies)
-  initialMovies.results.forEach((m) => {
-    var movie = {}
-    movie.title = m.title
-    movie.year = m.release_date.split("-")[0]
-    movie.movieId = m.id
-    movie.overview = m.overview
-    movie.poster = "http://image.tmdb.org/t/p/w500" + m.poster_path
-    // getYouTube(movie)
-    // getMovieInfo(movie)
-    saveMovieFirst(movie)
+  // searchActors().then(getMovies)
+  // var request = bottomFive(movies)
+  // console.log(request)
+  // bottomFive(filterMovies(getMovieInfo(getYouTube(getMovies(searchActors())))))/
+  searchActors()
+  .then(function(response){
+    const actorId = response.data.results[0].id
+    return actorId
   })
-  firstMovieInfo.forEach((m) => {
-    getMovieInfo(m)
+  .then((personID) => {
+    return getMoviesFromPersonID(personID)
   })
-  secondMovieInfo.forEach((m) =>{
-    getYouTube(m)
+  .then(function(response) {
+    const movieList = []
+    response.data.results.forEach((m) => {
+      var poster_path = "http://image.tmdb.org/t/p/w500" + m.poster_path
+      var movie = new MovieObj(m.title, m.release_date.split("-")[0], m.id, m.overview, poster_path)
+      movieList.push(movie)
+      // saveMovie(movie)
+    })
+    return Promise.all(movieList)
+  }).then((movieList) => {
+    debugger
   })
-
-
-  var request = bottomFive(movies)
-  console.log(request)
-  // bottomFive(filterMovies(getMovieInfo(getYouTube(getMovies(searchActors())))))
 
   function searchActors() {
-    return $.ajax({
-      method: "GET",
-      url: `https://api.themoviedb.org/3/search/person?query=${UserInput}&api_key=bcd69b485671c77289868b4acf21bcf0`
-    }).done(function(response){
-      personId = response.results[0].id
-    })
+    return axios.get(`https://api.themoviedb.org/3/search/person?query=${UserInput}&api_key=bcd69b485671c77289868b4acf21bcf0`)
   }
 
-  function getMovies() {
-    $.ajax({
-      method: "GET",
-      url: `https://api.themoviedb.org/3/discover/movie?with_cast=${personId}&vote_count.gte=20&sort_by=vote_average.asc&budget.desc&api_key=bcd69b485671c77289868b4acf21bcf0&include_image_language=en`
-    }).done(function(response) {
-      initialMovies = response
-      // response.results.forEach((m) => {
-      //   var movie = {}
-      //   movie.title = m.title
-      //   movie.year = m.release_date.split("-")[0]
-      //   movie.movieId = m.id
-      //   movie.overview = m.overview
-      //   movie.poster = "http://image.tmdb.org/t/p/w500" + m.poster_path
-      //
-      //   getYouTube(movie)
-      //   getMovieInfo(movie)
-      //   saveMovie(movie)
-      // })
-    })
+  function getMoviesFromPersonID(id) {
+    return axios.get(`https://api.themoviedb.org/3/discover/movie?with_cast=${id}&vote_count.gte=20&sort_by=vote_average.asc&budget.desc&api_key=bcd69b485671c77289868b4acf21bcf0&include_image_language=en`)
     // return movies
   }
-  function saveMovieFirst(movie){
-    firstMovieInfo.push(movie)
-  }
-  function saveMovieSecond(movie){
-    secondMovieInfo.push(movie)
-  }
-  function saveMovieFinal(movie){
-    finalMovieInfo.push(movie)
+
+  function saveMovie(movie){
+    movies.push(movie)
   }
 //-----------helpers to get all required attrs for movie below------------
-  function getMovieInfo(m){
-      $.ajax({
-        method: "GET",
-        url: `https://api.themoviedb.org/3/movie/${m.movieId}?&api_key=bcd69b485671c77289868b4acf21bcf0&append_to_results=imdb_id`
-      }).done(function(response) {
-        m.revenue = response.revenue
-        m.budget = response.budget
-        m.imdbId = response.imdb_id
-        saveMovieSecond(m)
-      })
+  function getMovieInfo(movie){
+    return axios.get(`https://api.themoviedb.org/3/movie/${movie.movieId}?&api_key=bcd69b485671c77289868b4acf21bcf0&append_to_results=imdb_id`)
   }
 
   function getYouTube(movie){
-      $.ajax({
-      method: "GET",
-      url: `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${movie.title.split(" ").join("+")}+trailer&key=AIzaSyDzIKgrZXiQZjPCJT1GcTEggK09QCYESw0`
-      }).done(function(yt){
+      axios.get(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${movie.title.split(" ").join("+")}+trailer&key=AIzaSyDzIKgrZXiQZjPCJT1GcTEggK09QCYESw0`)
+      .then(function(yt){
         movie.youtubeLink = `http://www.youtube.com/embed/${yt.items[0].id.videoId}`
-        saveMovieFinal(movie)
+        return movie
       })
     }
 
@@ -106,8 +66,7 @@ function bottomFive(){
   // movies.forEach((m) => {
   //   getMovieInfo(m)
   // })
-  debugger
-  var fmovies = finalMovieInfo.filter(filterMovies)
+  var fmovies = movies.filter(filterMovies)
   var result = fmovies.slice(0,5)
   return result
 }
