@@ -2,7 +2,6 @@ import axios from 'axios'
 
 class MovieObj {
   constructor(title, year, movieId, overview, poster){
-    this.attrs = []
     this.title = title
     this.year = year
     this.movieId = movieId
@@ -10,20 +9,17 @@ class MovieObj {
     this.poster = poster
     this.youtube = this.getYouTube.bind(this)
     this.getMovieInfo = this.getMovieInfo.bind(this)
-    this.getMovieInfo(movieId).then((resp)=>{
-      this.getYouTube(resp.movieId).then(function(resp){
-        this.youTubeURL = resp
-      }.bind(this))
-    })
+    this.getMovieInfo(movieId)
+    this.getYouTube(title)
+    debugger
   }
-
-
 
   getYouTube(title){
     return axios.get(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${title.split(" ").join("+")}+trailer&key=AIzaSyDzIKgrZXiQZjPCJT1GcTEggK09QCYESw0`)
     .then(function(yt){
-      return `http://www.youtube.com/embed/${yt.items[0].id.videoId}`
-    })
+      this.youTubeURL = `http://www.youtube.com/embed/${yt.data.items[0].id.videoId}`
+      return this
+    }.bind(this))
   }
 
   getMovieInfo(movieId){
