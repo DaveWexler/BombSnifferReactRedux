@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import actorByRating from '../Actions/ActorByRating'
 import { Field, reduxForm } from 'redux-form';
 
-
-
 class SearchBar extends Component {
 
   onSubmit (formData, dispatch) {

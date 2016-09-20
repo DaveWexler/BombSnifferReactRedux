@@ -3,14 +3,13 @@ import axios from 'axios'
 import MovieObj from '../models/movie'
 
 var personID
-var movies = []
 
 function actorByRating(UserInput) {
   // searchActors().then(getMovies)
   // var request = bottomFive(movies)
   // console.log(request)
   // bottomFive(filterMovies(getMovieInfo(getYouTube(getMovies(searchActors())))))/
-  searchActors()
+  const getMovies = searchActors()
   .then(function(response){
     const actorId = response.data.results[0].id
     return actorId
@@ -34,7 +33,6 @@ function actorByRating(UserInput) {
     var result = fmovies.slice(0,5)
     return result
   }).then((movies) => {
-    debugger
     return {
       type: "ACTOR_BY_RATING",
       payload: movies
@@ -54,7 +52,7 @@ function actorByRating(UserInput) {
     return (m.poster.split("/").pop() !== "w500null" && parseInt(m.year) < 2016 && m.revenue !== 0)
   }
 
-
+  return getMovies
 }
 
 export default actorByRating
