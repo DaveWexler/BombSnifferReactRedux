@@ -35,7 +35,7 @@ function actorByRating(UserInput) {
     return {
       type: "ACTOR_BY_RATING",
       payload: movies
-    } 
+    }
   })
 
   function searchActors() {

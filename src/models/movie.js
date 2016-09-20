@@ -10,14 +10,14 @@ class MovieObj {
     this.youtube = this.getYouTube.bind(this)
     this.getMovieInfo = this.getMovieInfo.bind(this)
     this.getMovieInfo(movieId)
-    this.getYouTube(title)
-    debugger
+    this.youtube(title)
   }
 
   getYouTube(title){
     return axios.get(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${title.split(" ").join("+")}+trailer&key=AIzaSyDzIKgrZXiQZjPCJT1GcTEggK09QCYESw0`)
     .then(function(yt){
       this.youTubeURL = `http://www.youtube.com/embed/${yt.data.items[0].id.videoId}`
+      debugger
       return this
     }.bind(this))
   }
@@ -28,6 +28,7 @@ class MovieObj {
       this.revenue = response.data.revenue
       this.budget = response.data.budget
       this.imdb_id = response.data.imdb_id
+      debugger
       return this
     }.bind(this))
   }
