@@ -27,7 +27,7 @@ class SearchBar extends Component {
                 <div className="col-md-3">
                   <label>Choose Actor or Director:</label>
                   <br/>
-                  <Field name="actorDirector" className="btn btn-default btn-lg dropdown-toggle" component="select">
+                  <Field name="actorDirector" className="btn btn-default btn-md dropdown-toggle" component="select">
                   {/* <select id="searchType" className="btn btn-default btn-lg dropdown-toggle" type="button" data-toggle="dropdown" {...actorDirector}> */}
                     <option />
                     <option value="actor" id="searchActor">Seach by Actor</option>
