@@ -19,19 +19,22 @@ function actorByRating(UserInput) {
     return getMoviesFromPersonID(personID)
   })
   .then(function(response) {
-    const movieList = []
-    response.data.results.forEach((m) => {
-      var poster_path = "http://image.tmdb.org/t/p/w500" + m.poster_path
-      var movie = new MovieObj(m.title, m.release_date.split("-")[0], m.id, m.overview, poster_path)
-      movieList.push(movie)
+    var movieList = response.data.results.map((m) => {
+      var poster_path = "http://image.tmdb.org/t/p/w500" + m.poster_path;
+      var movie = new MovieObj(m.title, m.release_date.split("-")[0], m.id, m.overview, poster_path);
+      return movie.getYouTube(movie.title).then((movie)=>{
+        return movie.getMovieInfo(movie.movieId).then((movie)=>{
+          return movie
+        })
+      })
     })
     return Promise.all(movieList)
   }).then((movieList) => {
-    debugger
     var fmovies = movieList.filter(filterMovies)
     var result = fmovies.slice(0,5)
     return result
   }).then((movies) => {
+    debugger
     return {
       type: "ACTOR_BY_RATING",
       payload: movies

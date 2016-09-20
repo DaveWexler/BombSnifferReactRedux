@@ -7,7 +7,6 @@ class MovieObj {
     this.movieId = movieId
     this.overview = overview
     this.poster = poster
-    this.youtube = this.getYouTube.bind(this)
     this.getMovieInfo = this.getMovieInfo.bind(this)
     this.getMovieInfo(movieId)
     this.youtube(title)
