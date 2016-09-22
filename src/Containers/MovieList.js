@@ -10,7 +10,7 @@ class MovieList extends Component {
       return m
     })
     var moviepanels = movies.map((movie, idx) => {
-      return <Movie key={idx} title={movie.title} year={movie.year} overview={movie.overview} poster={movie.poster} netmoney={movie.netmoney} youtube={movie.youtubeLink} imdb={movie.imdbId}/>
+      return <Movie key={idx} title={movie.title} year={movie.year} overview={movie.overview} poster={movie.poster} netmoney={movie.netmoney} youtube={movie.youtubeLink} imdb_id={movie.imdb_id}/>
     })
     return (
       <div>

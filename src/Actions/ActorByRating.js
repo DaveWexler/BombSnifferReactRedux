@@ -49,7 +49,7 @@ function actorByRating(UserInput) {
   }
 
   function filterMovies(m) {
-    return (m.poster.split("/").pop() !== "w500null" && parseInt(m.year) < 2016 && m.revenue !== 0)
+    return (m.poster.split("/").pop() !== "w500null" && parseInt(m.year) < 2016 && m.revenue !== 0 && m.budget !== 0)
   }
 
   return getMovies
