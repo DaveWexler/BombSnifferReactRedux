@@ -1,3 +1,27 @@
+Welcome to Bomb Sniffer!
+
+Everyone loves a good movie, sure.  But what about the horrible, terrible disastrous ones?  Whether you're a "so bad it's good" type or you're just curious about the worst bombs your favorite actor or director has ever been in or made, this app will give you the results you want.
+
+This project is still in progress.  This README will be updated as new functionality is added.
+
+## Current functionality
+
+* Searching for an actor by rating returns movies properly, but with no IMDB link or YouTube link yet.
+
+## Usage
+
+Simply type the first and last name of an actor or director you'd like to query into the search bar, select actor or director, select whether you'd like the results by worst average TMDB user rating or biggest box office loss, and hit submit.  That's all there is to it!
+
+The search will return the five worst movies based on your search criteria.  You can also click a title to visit the IMDB page for that movie, or the poster to watch a preview of the film.
+
+## Background
+
+This project stems from an earlier project I worked on with two partners as a student in the Flatiron School's immersive web development program.  The earlier version was written in vanilla Javascript as an object-oriented project, but after learning React-Redux later in our studies, I realized this was the perfect project to convert to it.
+
+
+
+-----
+
 Below you will find some information on how to perform common tasks.  
 You can find the most recent version of this guide [here](https://github.com/facebookincubator/create-react-app/blob/master/template/README.md).
 
