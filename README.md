@@ -6,7 +6,7 @@ This project is still in progress.  This README will be updated as new functiona
 
 ## Current functionality
 
-* Searching for an actor by rating returns movies properly, but with no IMDB link or YouTube link yet.
+* Searching for an actor by rating returns movies properly, but with no YouTube link yet.
 
 ## Usage
 
