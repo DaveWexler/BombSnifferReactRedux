@@ -23,7 +23,7 @@ function actorByRating(UserInput) {
       var movie = new MovieObj(m.title, m.release_date.split("-")[0], m.id, m.overview, poster_path);
       return movie.getYouTube(movie.title).then((movie)=>{
         return movie.getMovieInfo(movie.movieId).then((movie)=>{
-          return movie
+          return movie.fixMoney(movie.netMoney)
         })
       })
     })

@@ -10,7 +10,7 @@ class Movie extends Component {
           <h6>{this.props.year}</h6>
         </div>
         <div className="movieMoney">
-          <h6>${this.props.netmoney}</h6>
+          <h6 style={{color: this.props.styleColor}}>{this.props.boxoffice}</h6>
         </div>
         <div className="moviePosters" id={this.props.youTubeURL}>
            <img src={this.props.poster} className="img-thumbnail" style={{width:150 + 'px', height: 150 + 'px'}} />
